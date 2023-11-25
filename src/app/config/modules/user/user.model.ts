@@ -30,4 +30,4 @@ const userSchema = new Schema<TUser>({
   
   
   
-  export const User = model<TUser, UserModel>('Student', userSchema);
+  export const User = model<TUser, UserModel>('User', userSchema);
