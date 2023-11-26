@@ -15,7 +15,7 @@ const OrderSchema = z.object({
 export const UserValidationSchema = z.object({
   userId: z.number(),
   username: z.string(),
-  password: z.string().max(20),
+  password: z.string().max(100),
   fullName: z.object({
     firstName: z.string().max(20),
     lastName: z.string().max(20),

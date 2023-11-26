@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 
 import { UserService, isUserExists } from './user.service'
 import { UserValidationSchema } from './user.validation'
+import { addProductToOrder } from './user.service'
 
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -144,6 +145,8 @@ const updateUser = async (req: Request, res: Response) => {
   }
 }
 
+// delete controller
+
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const userId = Number(req.params.userId)
@@ -174,6 +177,36 @@ const deleteUser = async (req: Request, res: Response) => {
     })
   }
 }
+
+//oreder controller
+
+export const addProductToUserOrder = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const { productName, price, quantity } = req.body;
+
+    const success = await addProductToOrder(Number(userId), { productName, price, quantity });
+
+    if (success) {
+      res.status(201).json({
+        success: true,
+        message: 'Order created successfully!',
+        data: null,
+      });
+    } else {
+      throw new Error('Failed to create order');
+    }
+  } catch (error: any) {
+    
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create order',
+      error: error.message || 'Failed to create order',
+    });
+  }
+};
+
+
 
 export const userControllers = {
   createUser,

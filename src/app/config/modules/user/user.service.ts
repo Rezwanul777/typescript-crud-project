@@ -57,11 +57,34 @@ const deleteUserfromDB = async (id: number):Promise<any>  => {
   return result;
 };
 
+// order Management
+export const addProductToOrder = async (userId: number, productData: { productName: string; price: number; quantity: number }) => {
+  try {
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (!user.orders) {
+      user.orders = [];
+    }
+
+    user.orders.push(productData);
+    await user.save();
+
+    return true; // Return true on successful addition of the order
+  } catch (error) {
+    
+    throw new Error('Failed to create order');
+  }
+};
 
 export const UserService = {
     createUserDB,
     getAllUsersFromDB,
     singleUserFromDB,
     updateUserFromDB,
-    deleteUserfromDB
+    deleteUserfromDB,
+   
 }
