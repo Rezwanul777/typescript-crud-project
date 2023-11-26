@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 
-import { UserService, isUserExists } from './user.service'
+import { UserService, getUserOrders, isUserExists } from './user.service'
 import { UserValidationSchema } from './user.validation'
 import { addProductToOrder } from './user.service'
 
@@ -206,6 +206,27 @@ export const addProductToUserOrder = async (req: Request, res: Response) => {
   }
 };
 
+
+// get order
+
+export const getUserOrdersController = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const orders = await getUserOrders(Number(userId));
+
+    res.status(200).json({
+      success: true,
+      message: 'Orders fetched successfully!',
+      data: { orders },
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to fetch orders',
+      error: error.message || 'Failed to fetch orders',
+    });
+  }
+};
 
 
 export const userControllers = {

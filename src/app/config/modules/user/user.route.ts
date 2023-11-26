@@ -1,5 +1,5 @@
 import express from 'express'
-import { addProductToUserOrder, userControllers } from './user.controller'
+import { addProductToUserOrder, getUserOrdersController, userControllers } from './user.controller'
 
 const router = express.Router()
 
@@ -13,5 +13,7 @@ router.delete('/:userId', userControllers.deleteUser);
 
 // PUT /api/users/:userId/orders
 router.put('/:userId/orders',addProductToUserOrder);
+// get orders
+router.get('/:userId/orders', getUserOrdersController);
 
 export const StudentRoutes = router
