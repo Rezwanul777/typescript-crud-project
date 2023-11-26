@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "./user.model";
-import { UserService } from "./user.service"
+import { UserService, isUserExists } from "./user.service"
 
 
 
@@ -79,9 +79,72 @@ const getAllUsers=async(req:Request,res:Response)=>{
   }
 };
 
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.params.userId);
+    const userData = req.body;
+
+    // Check if the user exists
+    const userExists = await isUserExists(userId);
+    if (!userExists) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found',
+        },
+      });
+    }
+
+    // Update user data
+    const updatedUser = await UserService.updateUserFromDB(userId, userData);
+
+    if (!updatedUser) {
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to update user',
+        error: {
+          code: 404,
+          description: 'Failed to update user',
+        },
+      });
+    }
+
+    // Format response
+    const updatedResult = {
+      userId: updatedUser.userId,
+      username: updatedUser.username,
+      fullName: updatedUser.fullName,
+      age: updatedUser.age,
+      email: updatedUser.email,
+      isActive: updatedUser.isActive,
+      hobbies: updatedUser.hobbies,
+      address: updatedUser.address,
+    };
+
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully!',
+      data: updatedResult,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: {
+        code: 500,
+        description: 'Internal server error',
+      },
+    });
+  }
+};
+
+
 
 export const userControllers={
     createUser,
     getAllUsers,
-    singleUser
+    singleUser,
+    updateUser
 }

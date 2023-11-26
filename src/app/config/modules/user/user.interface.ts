@@ -24,7 +24,10 @@ export interface TUser {
     }>;
 }
 
+
 export type UserModel = Model<
 TUser
+//Record<string, never>,
+
   
 >;

@@ -8,5 +8,6 @@ const router = express.Router()
 router.post('/create-user', userControllers.createUser)
 router.get('/', userControllers.getAllUsers)
 router.get('/:userId', userControllers.singleUser)
+router.put('/:userId', userControllers.updateUser)
 
 export const StudentRoutes = router
