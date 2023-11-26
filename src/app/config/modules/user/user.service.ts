@@ -23,8 +23,8 @@ const createUserDB=async (user:TUser) => {
     }
   };
 
-const singleUserFromDB=async (id:string) => {
-    const result = await User.findOne({id:id});
+const singleUserFromDB=async (id:number) => {
+    const result = await User.findOne({userId: id});
     return result;
 }
 

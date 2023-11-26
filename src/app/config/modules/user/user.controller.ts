@@ -38,18 +38,50 @@ const getAllUsers=async(req:Request,res:Response)=>{
     }
 }
 
-const singleStudent=async(req: Request, res: Response)=>{
+ const singleUser = async (req: Request, res: Response) => {
   try {
-    
-  } catch (error) {
-    console.log(error);
-  }
-}
+    const userId = Number(req.params.userId);
+    const result = await UserService.singleUserFromDB(userId);
 
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found',
+        },
+      });
+    }
+
+    const RequiredResult = {
+      userId: result.userId,
+      username: result.username,
+      fullName: result.fullName,
+      age: result.age,
+      email: result.email,
+      isActive: result.isActive,
+      hobbies: result.hobbies,
+      address: result.address,
+    };
+
+    res.status(200).json({
+      success: true,
+      message: 'User fetched successfully!',
+      data: RequiredResult,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+     
+    });
+  }
+};
 
 
 export const userControllers={
     createUser,
     getAllUsers,
-    singleStudent
+    singleUser
 }
