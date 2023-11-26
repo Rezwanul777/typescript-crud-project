@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 
-import { UserService, getUserOrders, isUserExists } from './user.service'
+import { UserService, calculateTotalPrice, getUserOrders, isUserExists } from './user.service'
 import { UserValidationSchema } from './user.validation'
 import { addProductToOrder } from './user.service'
 
@@ -108,10 +108,10 @@ const updateUser = async (req: Request, res: Response) => {
     if (!updatedUser) {
       return res.status(500).json({
         success: false,
-        message: 'Failed to update user',
+        message: 'User not found',
         error: {
           code: 404,
-          description: 'Failed to update user',
+          description: 'User not found!',
         },
       })
     }
@@ -136,10 +136,10 @@ const updateUser = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Internal server error',
+      message: 'User not found',
       error: {
-        code: 500,
-        description: 'Internal server error',
+        code: 404,
+        description: 'User not found!',
       },
     })
   }
@@ -199,15 +199,19 @@ export const addProductToUserOrder = async (req: Request, res: Response) => {
   } catch (error: any) {
     
     res.status(500).json({
+  
       success: false,
-      message: 'Failed to create order',
-      error: error.message || 'Failed to create order',
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
     });
   }
 };
 
 
-// get order
+// get order for single user
 
 export const getUserOrdersController = async (req: Request, res: Response) => {
   try {
@@ -222,8 +226,35 @@ export const getUserOrdersController = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: error.message || 'Failed to fetch orders',
-      error: error.message || 'Failed to fetch orders',
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
+  }
+};
+
+// calculation controller
+
+export const calculateTotalPriceController = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const totalPrice = await calculateTotalPrice(Number(userId));
+
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
+      data: { totalPrice },
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
     });
   }
 };

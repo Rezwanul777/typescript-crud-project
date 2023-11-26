@@ -73,7 +73,7 @@ export const addProductToOrder = async (userId: number, productData: { productNa
     user.orders.push(productData);
     await user.save();
 
-    return true; // Return true on successful addition of the order
+    return true; 
   } catch (error) {
     
     throw new Error('Failed to create order');
@@ -81,7 +81,7 @@ export const addProductToOrder = async (userId: number, productData: { productNa
 };
 
 
-// get order
+// get order for single user
 
 export const getUserOrders = async (userId: number) => {
   try {
@@ -98,6 +98,25 @@ export const getUserOrders = async (userId: number) => {
     throw new Error('Failed to fetch orders');
   }
 };
+
+// calculation of total orders for single user
+export const calculateTotalPrice = async (userId: number) => {
+  try {
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const orders = user.orders || [];
+    const totalPrice = orders.reduce((acc, order) => acc + (order.price * order.quantity), 0);
+
+    return totalPrice;
+  } catch (error) {
+    throw new Error('Failed to calculate total price');
+  }
+};
+
 
 
 
