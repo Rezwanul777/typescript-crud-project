@@ -11,12 +11,12 @@ const createUser = async (req: Request, res: Response) => {
 
     const savedUser = await UserService.createUserDB(zodParseData)
 
-    // Respond with the saved user object (excluding sensitive fields like password)
-   
+    // Respond  excluding sensitive fields like password
+    const { password, ...userWithoutPassword } = savedUser.toObject({ getters: true });
     res.status(201).json({
       success: true,
       message: 'User created successfully!',
-      data: savedUser,
+      data:userWithoutPassword,
     })
   } catch (error: any) {
     res
@@ -24,7 +24,7 @@ const createUser = async (req: Request, res: Response) => {
       .json({
         success: false,
         message: 'Failed to create user',
-        error: error.message,
+        error: error.message ||"Something went wrong creating user",
       })
   }
 }
@@ -42,10 +42,11 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 }
 
-const singleUser = async (req: Request, res: Response) => {
+const singleUser = async (req:Request,res:Response) => {
   try {
     const userId = Number(req.params.userId)
     const result = await UserService.singleUserFromDB(userId)
+ 
 
     if (!result) {
       return res.status(404).json({

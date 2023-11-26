@@ -46,6 +46,8 @@ const userSchema = new Schema<TUser>({
       quantity: { type: Number },
     },
   ],
+},{
+  versionKey:false
 })
 
 // pre save middleware/hook, will work on create() save
@@ -67,4 +69,16 @@ userSchema.post('save', function (doc,next) {
   next()
  });
 
+ // query Middleware
+userSchema.pre('find',function(next){
+  this.find({isDeleted: {$ne: true}})
+  next()
+  
+})
+//prevention  after single  deleting data retriev
+userSchema.pre('findOne',function(next){
+  this.find({isDeleted: {$ne: true}})
+  next()
+  
+})
 export const User = model<TUser, UserModel>('User', userSchema)

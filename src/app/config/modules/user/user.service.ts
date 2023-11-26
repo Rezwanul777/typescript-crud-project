@@ -3,7 +3,7 @@ import { User } from "./user.model";
 
 // create user
 const createUserDB=async (user:TUser) => {
-    const result = await User.create(user);
+    const result = await User.create(user)
     return result
 }
 

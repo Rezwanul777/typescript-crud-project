@@ -17,7 +17,7 @@ export interface TUser {
       city: string;
       country: string;
     };
-    isDeleted:boolean;
+    isDeleted?:boolean;
     orders: Array<{
       productName: string;
       price: number;
