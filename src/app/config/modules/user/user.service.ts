@@ -51,10 +51,17 @@ export const isUserExists = async (id: number): Promise<boolean> => {
   }
 };
 
+// delete
+const deleteUserfromDB = async (id: number):Promise<any>  => {
+  const result = await User.updateOne({userId:id },{isDeleted: true});
+  return result;
+};
+
 
 export const UserService = {
     createUserDB,
     getAllUsersFromDB,
     singleUserFromDB,
-    updateUserFromDB
+    updateUserFromDB,
+    deleteUserfromDB
 }
