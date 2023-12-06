@@ -35,10 +35,10 @@ const userSchema = new Schema<TUser>({
     city: { type: String },
     country: { type: String },
   },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-  },
+  // isDeleted: {
+  //   type: Boolean,
+  //   default: false,
+  // },
   orders: [
     {
       productName: { type: String },
