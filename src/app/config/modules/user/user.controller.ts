@@ -3,21 +3,39 @@ import { Request, Response } from 'express'
 import { UserService, calculateTotalPrice, getUserOrders, isUserExists } from './user.service'
 import { UserValidationSchema } from './user.validation'
 import { addProductToOrder } from './user.service'
+import { TUser } from './user.interface'
 
 const createUser = async (req: Request, res: Response) => {
   try {
-    const { user: userData } = req.body
+    const userData = req.body
     // data validation using Zod
-    const zodParseData= UserValidationSchema.parse(userData)
+    // const zodParseData= await UserValidationSchema.parse(userData)
 
-    const savedUser = await UserService.createUserDB(zodParseData)
+    // const savedUser = await UserService.createUserDB(zodParseData)
 
-    // Respond  excluding sensitive fields like password
-    const { password, ...userWithoutPassword } = savedUser.toObject({ getters: true });
+    const result = await UserService.createUserDB(UserValidationSchema.parse(userData) as TUser);
+
+    // Respond  excluding sensitive fields like password and other fields in response body
+    // const { isDeleted, _id,orders,...userWithoutSensitiveFields } = result.toObject({ getters: true });
+
+    const responseData = {
+      userId: result.userId,
+      username: result.username,
+      fullName: {
+        firstName: result.fullName.firstName,
+        lastName: result.fullName.lastName,
+      },
+      age: result.age,
+      email: result.email,
+      isActive: result.isActive,
+      hobbies: result.hobbies,
+      address: result.address,
+    };
+
     res.status(201).json({
       success: true,
       message: 'User created successfully!',
-      data:userWithoutPassword,
+      data:responseData,
     })
   } catch (error: any) {
     res
@@ -267,3 +285,6 @@ export const userControllers = {
   updateUser,
   deleteUser,
 }
+
+
+// const result = await UserServices.createUserIntoDB(userSchema.parse(userData)

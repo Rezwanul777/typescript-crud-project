@@ -130,3 +130,12 @@ export const UserService = {
     deleteUserfromDB,
    
 }
+
+
+// const createUserIntoDB = async (userData: TUser) => {
+//   if (await User.isUserExists(userData.userId)) {
+//     throw new Error('User already exists');
+//   }
+//   const result = await User.create(userData);
+//   return result;
+// };
